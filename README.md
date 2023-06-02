@@ -1,7 +1,7 @@
 <h1 align="center"> DevLinks </h1>
 
 <p align="center">
-Criado no curso Discover promovido pela Rocketseat para ensino de tecnologias WEB. <br/>
+Criado no bootcamp Discover promovido pela Rocketseat para ensino de tecnologias WEB. <br/>
 </p>
 
 <p align="center">
