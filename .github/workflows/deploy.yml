@@ -5,6 +5,10 @@ on:
     branches:
       - staging
 
+permissions:
+  actions: read
+  contents: read
+
 jobs:
   call-main-workflow:
     name: 🔁 Executando workflow principal
