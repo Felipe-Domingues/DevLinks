@@ -6,18 +6,18 @@ on:
       - staging
 
 jobs:
-  teste-e-aprovar:
+  deploy-em-staging:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Executando testes (homologação)
+      - name: Realizando Deploy em Staging
         run: |
-          echo "Rodando testes..."
+          echo "Realizando deploy em staging..."
           sleep 5
-          echo "Testes concluídos com sucesso."
+          echo "Deploy em staging concluído com sucesso."
 
-  aprovar-e-merge:
-    needs: teste-e-aprovar
+  aprovar-merge-to-production:
+    needs: deploy-em-staging
     runs-on: ubuntu-latest
     environment:
       name: production
