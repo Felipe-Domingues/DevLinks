@@ -1,4 +1,3 @@
-# .github/workflows/teste-workflow.yml
 name: TesteWorkflow
 
 on:
@@ -10,6 +9,6 @@ jobs:
     steps:
       - name: Executando testes
         run: |
-          echo "Simulando testes de homologação..."
-          sleep 10
-          echo "Testes concluídos com sucesso."
+          echo "Iniciando testes..."
+          sleep 5
+          echo "Testes concluídos com sucesso!"

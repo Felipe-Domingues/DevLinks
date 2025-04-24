@@ -1,3 +1,11 @@
+name: Aprovar e Publicar
+
+on:
+  workflow_run:
+    workflows: ["TesteWorkflow"]
+    types:
+      - completed
+
 jobs:
   aprovar-publicacao:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -6,8 +14,8 @@ jobs:
       name: production
       url: https://seu-sistema-em-producao.com
     steps:
-      - name: Aguardar aprovação manual para publicar
-        run: echo "Aguardando aprovação..."
+      - name: Aguardando aprovação manual
+        run: echo "Aguardando aprovação via GitHub UI..."
 
       - name: Criar Pull Request de staging para main
         id: criar_pr
