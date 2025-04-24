@@ -20,12 +20,6 @@ jobs:
       - name: Aguardar aprovação para publicar em produção
         run: echo "Esperando aprovação manual para publicar..."
 
-      - name: Autenticar GitHub CLI
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          echo "${GH_TOKEN}" | gh auth login --with-token
-
       - name: Criar Pull Request staging → main
         id: criar_pr
         env:
