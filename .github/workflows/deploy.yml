@@ -1,0 +1,13 @@
+name: 🚀 Pipeline Principal via workflow externo
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  call-main-workflow:
+    name: 🔁 Executando workflow principal
+    uses: ./.github/workflows/main.yml
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
