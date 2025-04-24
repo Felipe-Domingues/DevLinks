@@ -20,6 +20,9 @@ jobs:
       - name: Aguardar aprovação para publicar em produção
         run: echo "Esperando aprovação manual para publicar..."
 
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
       - name: Criar Pull Request staging → main
         id: criar_pr
         env:
