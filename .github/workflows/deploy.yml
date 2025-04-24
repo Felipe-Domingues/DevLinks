@@ -10,6 +10,6 @@ jobs:
     name: 🔁 Executando workflow principal
     uses: felipe-domingues/workflows-base/.github/workflows/main.yml@main
     with:
-      repository: ${{ github.repository }}
+      repository: felipe-domingues/app-staging
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
