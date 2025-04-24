@@ -5,12 +5,11 @@ on:
     branches:
       - staging
 
-permissions:
-  actions: read
-  contents: read
-
 jobs:
   call-main-workflow:
     name: 🔁 Executando workflow principal
-    uses: Felipe-Domingues/workflows-base/.github/workflows/main.yml@main
-    secrets: inherit
+    uses: felipe-domingues/workflows-base/.github/workflows/main.yml@main
+    with:
+      repository: ${{ github.repository }}
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
