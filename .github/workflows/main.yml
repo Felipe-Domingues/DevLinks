@@ -13,7 +13,7 @@ jobs:
       - name: Realizando Deploy em Staging
         run: |
           echo "Realizando deploy em staging..."
-          sleep 5
+          sleep 1
           echo "Deploy em staging concluído com sucesso."
 
   realizar-deploy-em-producao:
@@ -42,22 +42,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           gh repo set-default ${{ github.repository }}
-          TIMESTAMP=$(date +"%d/%m/%Y %H:%M:%S")
+          TIMESTAMP=$(TZ=America/Sao_Paulo date +"%d/%m/%Y %H:%M:%S")
           PR_TITLE="Publicação $TIMESTAMP"
           PR_BODY="Pull Request automático feito pelo workflow de deploy"
           PR_URL=$(gh pr create --base main --head staging --title "$PR_TITLE" --body "$PR_BODY" || true)
           echo "PR_URL=$PR_URL" >> $GITHUB_ENV
           PR_NUMBER=$(echo "$PR_URL" | grep -o '[0-9]*$')
           echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
-
-          # Coletar autores dos commits entre staging e main
-          AUTHORS=$(git fetch origin main && git log origin/main..origin/staging --pretty=format:"%ae" | sort -u | cut -d@ -f1 | tr '\n' ',' | sed 's/,$//')
-
-          # Adicionar assignees se houver autores
-          if [ -n "$AUTHORS" ]; then
-            echo "Adicionando assignees: $AUTHORS"
-            gh pr edit "$PR_NUMBER" --add-assignee "$AUTHORS" || true
-          fi
 
       - name: Merge Pull Request
         id: verifica_pr
@@ -77,5 +68,5 @@ jobs:
       - name: Rodando testes em produção
         run: |
           echo "Iniciando verificação pós-merge na main..."
-          sleep 5
+          sleep 1
           echo "Testes em produção concluídos com sucesso."
