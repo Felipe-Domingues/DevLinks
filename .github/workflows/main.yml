@@ -16,8 +16,8 @@ jobs:
           sleep 5
           echo "Deploy em staging concluído com sucesso."
 
-  deseja-realizar-deploy-em-producao:
-    name: Deseja realizar deploy em produção?
+  realizar-deploy-em-producao:
+    name: Realizar deploy em produção?
     needs: deploy-em-staging
     runs-on: ubuntu-latest
     environment:
@@ -28,7 +28,7 @@ jobs:
 
   merge-para-main:
     name: Merge para Main
-    needs: deseja-realizar-deploy-em-producao
+    needs: realizar-deploy-em-producao
     runs-on: ubuntu-latest
     outputs:
       merged: ${{ steps.verifica_pr.outputs.merged }}
