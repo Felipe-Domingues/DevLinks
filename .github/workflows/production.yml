@@ -1,0 +1,18 @@
+name: 🚀 Production Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-production:
+    name: 🧪 Testes de Produção
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: 🔎 Rodando verificação final
+        run: |
+          echo -e "\033[1;35m🚢 Executando testes no ambiente de produção...\033[0m"
+          sleep 2
+          echo -e "\033[1;32m✅ Produção verificada com sucesso!\033[0m"

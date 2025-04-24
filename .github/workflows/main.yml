@@ -1,4 +1,4 @@
-name: Deploy Staging → Produção
+name: 🚀 Pipeline Principal via workflow externo
 
 on:
   push:
@@ -6,67 +6,8 @@ on:
       - staging
 
 jobs:
-  deploy-em-staging:
-    name: Deploy em Staging
-    runs-on: ubuntu-latest
-    steps:
-      - name: Realizando Deploy em Staging
-        run: |
-          echo "Realizando deploy em staging..."
-          sleep 1
-          echo "Deploy em staging concluído com sucesso."
-
-  realizar-deploy-em-producao:
-    name: Realizar deploy em produção?
-    needs: deploy-em-staging
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-    steps:
-      - name: Aguardando aprovação manual para produção
-        run: echo "Aguardando aprovação..."
-
-  merge-para-main:
-    name: Merge para Main
-    needs: realizar-deploy-em-producao
-    runs-on: ubuntu-latest
-    outputs:
-      merged: ${{ steps.verifica_pr.outputs.merged }}
-    steps:
-      - name: Checkout do repositório
-        uses: actions/checkout@v4
-
-      - name: Criar Pull Request staging → main
-        id: criar_pr
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          gh repo set-default ${{ github.repository }}
-          TIMESTAMP=$(TZ=America/Sao_Paulo date +"%d/%m/%Y %H:%M:%S")
-          PR_TITLE="Publicação $TIMESTAMP"
-          PR_BODY="Pull Request automático feito pelo workflow de deploy"
-          PR_URL=$(gh pr create --base main --head staging --title "$PR_TITLE" --body "$PR_BODY" || true)
-          echo "PR_URL=$PR_URL" >> $GITHUB_ENV
-          PR_NUMBER=$(echo "$PR_URL" | grep -o '[0-9]*$')
-          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
-
-      - name: Merge Pull Request
-        id: verifica_pr
-        if: env.PR_NUMBER != ''
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          gh pr merge $PR_NUMBER --merge --repo ${{ github.repository }}
-          echo "merged=true" >> $GITHUB_OUTPUT
-
-  deploy-em-producao:
-    name: Deploy em Produção
-    needs: merge-para-main
-    runs-on: ubuntu-latest
-    if: needs.merge-para-main.outputs.merged == 'true'
-    steps:
-      - name: Rodando testes em produção
-        run: |
-          echo "Iniciando verificação pós-merge na main..."
-          sleep 1
-          echo "Testes em produção concluídos com sucesso."
+  call-main-workflow:
+    name: 🔁 Executando workflow principal
+    uses: felipe-domingues/workflows-base/.github/workflows/main.yml@main
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
