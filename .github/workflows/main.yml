@@ -7,8 +7,8 @@ on:
 
 jobs:
   deploy-em-staging:
+    name: Deploy em Staging
     runs-on: ubuntu-latest
-
     steps:
       - name: Realizando Deploy em Staging
         run: |
@@ -16,16 +16,23 @@ jobs:
           sleep 5
           echo "Deploy em staging concluído com sucesso."
 
-  aprovar-merge-to-production:
+  deseja-realizar-deploy-em-producao:
+    name: Deseja realizar deploy em produção?
     needs: deploy-em-staging
     runs-on: ubuntu-latest
     environment:
       name: production
-      # A aprovação manual será exigida aqui
     steps:
-      - name: Aguardar aprovação manual
-        run: echo "Esperando aprovação para publicação em produção..."
+      - name: Aguardando aprovação manual para produção
+        run: echo "Aguardando aprovação..."
 
+  merge-para-main:
+    name: Merge para Main
+    needs: deseja-realizar-deploy-em-producao
+    runs-on: ubuntu-latest
+    outputs:
+      merged: ${{ steps.verifica_pr.outputs.merged }}
+    steps:
       - name: Checkout do repositório
         uses: actions/checkout@v4
 
@@ -41,8 +48,22 @@ jobs:
           echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
 
       - name: Merge Pull Request
+        id: verifica_pr
         if: env.PR_NUMBER != ''
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           gh pr merge $PR_NUMBER --merge --repo ${{ github.repository }}
+          echo "merged=true" >> $GITHUB_OUTPUT
+
+  deploy-em-producao:
+    name: Deploy em Produção
+    needs: merge-para-main
+    runs-on: ubuntu-latest
+    if: needs.merge-para-main.outputs.merged == 'true'
+    steps:
+      - name: Rodando testes em produção
+        run: |
+          echo "Iniciando verificação pós-merge na main..."
+          sleep 5
+          echo "Testes em produção concluídos com sucesso."
