@@ -8,7 +8,7 @@ on:
 jobs:
   call-main-workflow:
     name: 🔁 Executando workflow principal
-    uses: Felipe-Domingues/workflows-base/.github/workflows/main.yml@main
+    uses: felipe-domingues/workflows-base/.github/workflows/main.yml@main
     with:
       repository: ${{ github.repository }}
     secrets:
