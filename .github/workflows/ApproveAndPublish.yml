@@ -1,0 +1,29 @@
+# .github/workflows/aprovar-e-publicar.yml
+name: Aprovar e Publicar
+
+on:
+  workflow_run:
+    workflows: ["TesteWorkflow"]
+    types:
+      - completed
+
+jobs:
+  aprovar-publicacao:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://seu-sistema-em-producao.com
+    steps:
+      - name: Aguardar aprovação manual para publicar
+        uses: hmarr/auto-approve-action@v3.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge staging -> main
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }} # Seu token com permissão de escrita
+        run: |
+          gh repo set-default ${{ github.repository }}
+          gh pr create --base main --head staging --title "Publicar em produção" --body "Merge automático após aprovação" || echo "PR já existe"
+          gh pr merge --auto --merge
