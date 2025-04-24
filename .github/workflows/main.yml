@@ -8,8 +8,7 @@ on:
 jobs:
   teste-e-aprovar:
     runs-on: ubuntu-latest
-    environment:
-      name: production
+
     steps:
       - name: Executando testes (homologação)
         run: |
@@ -17,8 +16,15 @@ jobs:
           sleep 5
           echo "Testes concluídos com sucesso."
 
-      - name: Aguardar aprovação para publicar em produção
-        run: echo "Esperando aprovação manual para publicar..."
+  aprovar-e-merge:
+    needs: teste-e-aprovar
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      # A aprovação manual será exigida aqui
+    steps:
+      - name: Aguardar aprovação manual
+        run: echo "Esperando aprovação para publicação em produção..."
 
       - name: Checkout do repositório
         uses: actions/checkout@v4
