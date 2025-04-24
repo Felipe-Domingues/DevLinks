@@ -8,8 +8,6 @@ on:
 jobs:
   call-main-workflow:
     name: 🔁 Executando workflow principal
-    uses: https://github.com/Felipe-Domingues/workflows-base/blob/b1dd573f5b45d23774b6bbcd5917441960eb2ab6/.github/workflows/main.yml
-    with:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    uses: felipe-domingues/workflows-base/.github/workflows/main.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
