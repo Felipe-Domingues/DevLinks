@@ -9,5 +9,9 @@ jobs:
   call-main-workflow:
     name: 🔁 Executando workflow principal
     uses: felipe-domingues/workflows-base/.github/workflows/main.yml@main
+    with:
+      # Passe variáveis necessárias para o workflow reutilizado, se necessário.
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     secrets:
+      # Adicione qualquer segredo necessário.
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
