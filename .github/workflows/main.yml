@@ -1,0 +1,17 @@
+# .github/workflows/trigger-teste-workflow.yml
+name: Trigger TesteWorkflow
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger TesteWorkflow
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: TesteWorkflow
+          token: ${{ secrets.GITHUB_TOKEN }}
