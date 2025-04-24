@@ -12,5 +12,5 @@ permissions:
 jobs:
   call-main-workflow:
     name: 🔁 Executando workflow principal
-    uses: Felipe-Domingues/workflows-base/.github/workflows/main.yml@d1f7e7b267d3425618611d75d0551b52fc69ae10
+    uses: Felipe-Domingues/workflows-base/.github/workflows/main.yml@main
     secrets: inherit
