@@ -16,8 +16,8 @@ jobs:
           sleep 5
           echo "Deploy em staging concluído com sucesso."
 
-  deseja-realizar-deploy-em-producao:
-    name: Deseja realizar deploy em produção?
+  realizar-deploy-em-producao:
+    name: Realizar deploy em produção?
     needs: deploy-em-staging
     runs-on: ubuntu-latest
     environment:
@@ -28,7 +28,7 @@ jobs:
 
   merge-para-main:
     name: Merge para Main
-    needs: deseja-realizar-deploy-em-producao
+    needs: realizar-deploy-em-producao
     runs-on: ubuntu-latest
     outputs:
       merged: ${{ steps.verifica_pr.outputs.merged }}
@@ -42,7 +42,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           gh repo set-default ${{ github.repository }}
-          TIMESTAMP=$(date +"%d/%m/%Y %H:%M:%S")
+          TIMESTAMP=$(TZ=America/Sao_Paulo date +"%d/%m/%Y %H:%M:%S")
           PR_TITLE="Publicação $TIMESTAMP"
           PR_BODY="Pull Request automático feito pelo workflow de deploy"
           PR_URL=$(gh pr create --base main --head staging --title "$PR_TITLE" --body "$PR_BODY" || true)
@@ -50,13 +50,15 @@ jobs:
           PR_NUMBER=$(echo "$PR_URL" | grep -o '[0-9]*$')
           echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
 
-          # Coletar autores dos commits entre staging e main
-          AUTHORS=$(git fetch origin main && git log origin/main..origin/staging --pretty=format:"%ae" | sort -u | cut -d@ -f1 | tr '\n' ',' | sed 's/,$//')
+          # Buscar usuários que fizeram commits entre main e staging
+          git fetch origin main
+          AUTHORS=$(git log origin/main..origin/staging --pretty=format:"%an" | sort -u | tr '\n' ',' | sed 's/,$//')
 
-          # Adicionar assignees se houver autores
           if [ -n "$AUTHORS" ]; then
             echo "Adicionando assignees: $AUTHORS"
             gh pr edit "$PR_NUMBER" --add-assignee "$AUTHORS" || true
+          else
+            echo "Nenhum autor identificado para adicionar como assignee."
           fi
 
       - name: Merge Pull Request
